@@ -1,0 +1,76 @@
+cd $pb
+
+cat <<EOF > seamantech.conf
+WSGIPythonHome /home/ubuntu/env_2.7
+WSGIPythonPath /home/ubuntu/Projects/seamantech/app:/home/ubuntu/env_2.7/lib/python2.7/site-packages
+
+<VirtualHost *:80>
+
+        ServerAdmin mark.b.seaman@gmail.com
+
+        # Aliases for this server application
+        ServerName seamantech.com
+        ServerAlias act2learn.org
+        ServerAlias acttolearn.org
+        ServerAlias agilebusiness.us
+        ServerAlias dr-prof.com
+        ServerAlias exteriorbrain.com
+        ServerAlias fightbitrot.com
+        ServerAlias gallery.shrinking-world.org
+        ServerAlias harborwalk.shrinking-world.org
+        ServerAlias how-to-automate.com
+        ServerAlias markseaman.org
+        ServerAlias my-book-live.com
+        ServerAlias my-book-online.com
+        ServerAlias mybookonline.org
+        ServerAlias myslideslive.com
+        ServerAlias myslidesonline.com
+        ServerAlias myslidesonline.org
+        ServerAlias ourinwardjourney.com
+        ServerAlias patterns.shrinking-world.org
+        ServerAlias seamansguide.com
+        ServerAlias seamanslog.com
+        ServerAlias seaman-tech.com
+        ServerAlias shrinking-world.org
+        ServerAlias spiritual-things.org
+        ServerAlias super.shrinking-world.org
+        ServerAlias the-core-idea.com
+        ServerAlias the-very-idea.us
+        ServerAlias world-class-software.com
+
+
+        Alias /robots.txt /home/ubuntu/Projects/seamantech/static/robots.txt
+        Alias /favicon.ico /home/ubuntu/Projects/seamantech/static/favicon.ico
+
+        Alias /media/ /home/ubuntu/Projects/seamantech/app/media/
+        Alias /static/ /home/ubuntu/Projects/seamantech/app/static/
+
+        <Directory /home/ubuntu/Projects/seamantech/app/media/>
+            Order deny,allow
+            Allow from all
+        </Directory>
+
+        <Directory /home/ubuntu/Projects/seamantech/app/static/>
+            Order deny,allow
+            Allow from all
+        </Directory>
+
+        WSGIDaemonProcess seamantech user=ubuntu group=ubuntu processes=4 threads=2 python-path="/home/ubuntu/Projects/seamantech/app:/home/ubuntu/env_2.7/lib/python2.7/site-packages"
+        WSGIScriptAlias / /home/ubuntu/Projects/seamantech/app/app/wsgi.py
+        WSGIProcessGroup seamantech
+        WSGIApplicationGroup %{GLOBAL}
+
+        <Directory /home/ubuntu/Projects/seamantech/app>                                          
+            Require all granted
+        </Directory>
+
+        LogLevel info
+        ErrorLog /home/ubuntu/Projects/seamantech/logs/error-event.log
+        CustomLog /home/ubuntu/Projects/seamantech/logs/access-event.log combined
+</VirtualHost>
+EOF
+
+
+sudo cp seamantech.conf /etc/apache2/sites-available/seamantech.conf
+sudo a2ensite seamantech.conf
+sudo service apache2 restart
